@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ar"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>نظام الاختيارات</title> 
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background-image: url('https://gifdb.com/images/high/incredible-sound-wave-art-hxgh3rtf5v8vvh5i.gif');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+        .options {
+            display: none;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .name-input {
+            display: none;
+            margin-top: 20px;
+        }
+        h1 {
+            font-size: 50px;
+            color: #fff;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.6);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .chat-logo {
+            display: inline-block;
+        }
+        .chat-logo .chat {
+            color: yellow; /* اللون الأصفر لكلمة "Chat" */
+            font-weight: bold;
+        }
+        .chat-logo .sphere {
+            color: #00bfff; /* اللون الأزرق السماوي أو لون يرمز لاسمه */
+            font-weight: bold;
+        }
+        #coins {
+            font-size: 24px;
+            color: #ffcc00;
+            margin-top: 20px;
+        }
+    </style> 
+ </head> 
+ <body> 
+  <h1> <span class="chat-logo"> <span class="chat">Chat</span> <span class="sphere">Sphere</span> </span> </h1> 
+  <button id="main-button">اضغط للاختيار</button> 
+  <div class="options" id="options"> 
+    <button onclick="window.location.href='developer.html'">خاص بالمطورين</button> 
+    <button onclick="window.location.href='create-room.html'">إنشاء غرفة خاصة</button> 
+    <button id="public-chat-btn">الدردشة العلنية</button> 
+  </div> 
+  <div class="name-input" id="name-input"> 
+   <input type="text" id="username" placeholder="أدخل اسمك"> 
+   <button id="enter-chat-btn">دخول</button> 
+  </div> 
+
+  <!-- عرض العملات -->
+  <div id="coins">
+    🪙 <span id="coin-count">0</span>
+  </div>
+
+  <script>
+        const mainButton = document.getElementById('main-button');
+        const options = document.getElementById('options');
+        const publicChatBtn = document.getElementById('public-chat-btn');
+        const nameInputDiv = document.getElementById('name-input');
+        const enterChatBtn = document.getElementById('enter-chat-btn');
+        const usernameInput = document.getElementById('username');
+        const coinCount = document.getElementById('coin-count');
+
+        // الحصول على عدد العملات المخزنة في localStorage
+        let storedCoins = parseInt(localStorage.getItem('coins')) || 0;
+        let lastCoinTime = parseInt(localStorage.getItem('lastCoinTime')) || Date.now();
+
+        // تحديث عدد العملات في الواجهة
+        function updateCoinDisplay() {
+            coinCount.textContent = storedCoins;
+        }
+
+        // وظيفة لزيادة العملة كل 2 دقائق
+        function increaseCoins() {
+            const currentTime = Date.now();
+            const timeDiff = currentTime - lastCoinTime;
+
+            // إذا مر أكثر من 2 دقيقة (120000 ميلي ثانية) من آخر زيادة للعملات
+            if (timeDiff >= 120000) {
+                storedCoins++; // زيادة العملة
+                localStorage.setItem('coins', storedCoins); // حفظ عدد العملات
+                lastCoinTime = currentTime; // تحديث وقت آخر زيادة للعملات
+                localStorage.setItem('lastCoinTime', lastCoinTime); // حفظ الوقت في localStorage
+                updateCoinDisplay(); // تحديث العرض
+            }
+        }
+
+        // بدء العد التنازلي لزيادة العملات
+        setInterval(increaseCoins, 1000); // فحص كل ثانية
+
+        // عرض عدد العملات في البداية
+        updateCoinDisplay();
+
+        // عرض الخيارات عند الضغط
+        mainButton.addEventListener('click', () => {
+            options.style.display = options.style.display === 'none' || options.style.display === '' ? 'block' : 'none';
+            nameInputDiv.style.display = 'none';
+        });
+
+        // عرض حقل إدخال الاسم عند اختيار "الدردشة العلنية"
+        publicChatBtn.addEventListener('click', () => {
+            nameInputDiv.style.display = 'block';
+        });
+
+        // تخزين اسم المستخدم والتوجيه للدردشة العلنية
+        enterChatBtn.addEventListener('click', () => {
+            const username = usernameInput.value.trim();
+            if (username) {
+                localStorage.setItem('username', username);  // تخزين اسم المستخدم
+                window.location.href = 'public-chat.html'; // توجيه إلى صفحة الدردشة الجديدة
+            } else {
+                alert('من فضلك أدخل اسمك');
+            }
+        });
+    </script> 
+ 
+</body></html>
